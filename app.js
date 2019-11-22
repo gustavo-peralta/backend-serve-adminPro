@@ -1,10 +1,16 @@
 // Requires
 var express = require('express');
 var mongoose = require('mongoose');
-
+var bodyParser = require('body-parser');
 
 // Inicializar variables
 var app = express();
+
+
+// Body parser
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // parse application/json
 
 
 // Conexion a la base de datos
@@ -16,14 +22,21 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, resp) 
 });
 
 
-// Rutas
-app.get('/', (request, response, next) => {
+// Importar Rutas
+var appRoutes = require('./routes/app');
+var usuarioRoutes = require('./routes/usuario');
 
-    response.status(200).json({
-        ok: true,
-        mensaje: 'Petición relizada correctamente'
-    });
-});
+// Rutas -> Creación de un middel where, algo que se ejecuta antes de otras rutas
+app.use('/', appRoutes);
+app.use('/usuario', usuarioRoutes);
+
+// app.get('/', (request, response, next) => {
+
+//     response.status(200).json({
+//         ok: true,
+//         mensaje: 'Petición relizada correctamente'
+//     });
+// });
 
 
 // Escuchar peticiones
