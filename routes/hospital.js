@@ -120,27 +120,27 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
     var id = req.params.id;
 
-    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+    Hospital.findByIdAndRemove(id, (err, hospitalBorrado) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar el usuario',
+                mensaje: 'Error al borrar el hospital',
                 errors: err
             });
         }
 
-        if (!usuarioBorrado) {
+        if (!hospitalBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe un usuario con este id',
-                errors: { message: 'No existe un usuario con ese id' }
+                mensaje: 'No existe un hospital con este id',
+                errors: { message: 'No existe un hospital con ese id' }
             });
         }
 
 
         res.status(200).json({
             ok: true,
-            usuario: usuarioBorrado
+            usuario: hospitalBorrado
         });
     });
 });

@@ -27,11 +27,13 @@ var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
 var hospitalRoutes = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
 
 // Rutas -> Creación de un middel where, algo que se ejecuta antes de otras rutas
 app.use('/', appRoutes);
 app.use('/usuario', usuarioRoutes);
 app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
 
 app.use('/login', loginRoutes);
 
