@@ -6,66 +6,58 @@ var mdAutenticacion = require('../middlewares/autenticacion');
 
 var app = express();
 
-var Usuario = require('../models/usuario');
+var Hospital = require('../models/hospital');
 
 // =========================================
-// Obtener todos los usuarios
+// Obtener todos los hospitales
 // =========================================
-app.get('/', (request, response, next) => {
+app.get('/', (req, res, next) => {
 
-    Usuario.find({}, 'nombre email img role')
-        .exec((err, usuarios) => {
+    Hospital.find({}, 'hospital nombre usuario')
+        .exec((err, hospitales) => {
+
             if (err) {
                 return response.status(500).json({
                     ok: false,
-                    mensaje: 'Error cargando usuarios',
+                    mensaje: 'Error cargando hospitales',
                     errors: err
                 });
             }
 
-            response.status(200).json({
+            res.status(200).json({
                 ok: true,
-                usuarios
+                hospitales
             });
         });
-
-
-    // response.status(200).json({
-    //     ok: true,
-    //     mensaje: 'Get de usuarios'
-    // });
 });
 
-
 // =========================================
-// Crear un nuevo usuario
+// Crear un nuevo hospital
 // =========================================
 // Voy a recivir la información como parametro de un HTTTP POST
 app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var body = req.body; // Esto solo funciona si tenemos instalado el body-parser
 
-    var usuario = new Usuario({
+    var hospital = new Hospital({
         nombre: body.nombre,
-        email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        usuario: body.usuario
     });
 
-    usuario.save((err, usuarioGuardado) => {
+    hospital.save((err, hospitalGuardado) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear usuario',
+                mensaje: 'Error al crear hospital',
                 errors: err
             });
         }
 
         res.status(201).json({
             ok: true,
-            usuario: usuarioGuardado,
-            usuarioToken: req.usuario
+            hospital: hospitalGuardado,
+            hospitalToken: req.hospital
         });
     });
 
@@ -79,43 +71,43 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById(id, (err, usuario) => {
+    Hospital.findById(id, (err, hospital) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar usuario',
+                mensaje: 'Error al buscar hospital',
                 errors: err
             });
         }
 
-        if (!usuario) {
+        if (!hospital) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El usuario con el ' + id + ' no existe',
-                errors: { message: 'No existe ningún usuario con este ID' }
+                mensaje: 'El hospital con el ' + id + ' no existe',
+                errors: { message: 'No existe ningún hospital con este ID' }
             });
         }
 
-        usuario.nombre = body.nombre;
-        usuario.email = body.email;
-        usuario.rol = body.rol;
+        hospital.nombre = body.nombre;
+        hospital.img = body.img;
+        hospital.usuario = body.usuario;
 
-        usuario.save((err, usuarioGuardado) => {
+        hospital.save((err, hospitalGuardado) => {
 
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar el usuario',
+                    mensaje: 'Error al actualizar el hospital',
                     errors: err
                 });
             }
 
-            usuarioGuardado.password = ':)';
+            hospitalGuardado.password = ':)';
 
             res.status(200).json({
                 ok: true,
-                usuario: usuarioGuardado
+                hospital: hospitalGuardado
             });
         });
     });

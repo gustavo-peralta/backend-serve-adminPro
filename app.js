@@ -26,10 +26,13 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, resp) 
 var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
+var hospitalRoutes = require('./routes/hospital');
 
 // Rutas -> Creación de un middel where, algo que se ejecuta antes de otras rutas
 app.use('/', appRoutes);
 app.use('/usuario', usuarioRoutes);
+app.use('/hospital', hospitalRoutes);
+
 app.use('/login', loginRoutes);
 
 // app.get('/', (request, response, next) => {
