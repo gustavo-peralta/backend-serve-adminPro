@@ -13,7 +13,12 @@ var Usuario = require('../models/usuario');
 // =========================================
 app.get('/', (request, response, next) => {
 
+    var desde = request.query.desde || 0;
+    desde = Number(desde);
+
     Usuario.find({}, 'nombre email img role')
+        .skip(desde)
+        .limit(5) // funciones de mongoose
         .exec((err, usuarios) => {
             if (err) {
                 return response.status(500).json({
@@ -23,10 +28,17 @@ app.get('/', (request, response, next) => {
                 });
             }
 
-            response.status(200).json({
-                ok: true,
-                usuarios
+            // Contar el numero de resgistros
+            Usuario.countDocuments({}, (err, count) => {
+
+                response.status(200).json({
+                    ok: true,
+                    usuarios,
+                    total: count
+                });
+
             });
+
         });
 
 

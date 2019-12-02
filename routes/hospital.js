@@ -13,7 +13,13 @@ var Hospital = require('../models/hospital');
 // =========================================
 app.get('/', (req, res, next) => {
 
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
+
     Hospital.find({}, 'hospital nombre usuario')
+        .skip(desde)
+        .limit(5) // funciones de mongoose
+        .populate('usuario', 'nombre email')
         .exec((err, hospitales) => {
 
             if (err) {
@@ -24,10 +30,18 @@ app.get('/', (req, res, next) => {
                 });
             }
 
-            res.status(200).json({
-                ok: true,
-                hospitales
+            // Contar el numero de resgistros
+            Hospital.countDocuments({}, (err, count) => {
+
+                res.status(200).json({
+                    ok: true,
+                    hospitales,
+                    total: count
+                });
+
             });
+
+
         });
 });
 
