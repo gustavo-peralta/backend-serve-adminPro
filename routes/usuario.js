@@ -53,7 +53,7 @@ app.get('/', (request, response, next) => {
 // Crear un nuevo usuario
 // =========================================
 // Voy a recivir la información como parametro de un HTTTP POST
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post('/', (req, res) => {
 
     var body = req.body; // Esto solo funciona si tenemos instalado el body-parser
 
